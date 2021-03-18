@@ -1,0 +1,56 @@
+/* .accForm {
+    border: 1px solid rgb(204, 203, 203);
+    width: 80%;
+    height: auto;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-shadow: 3px 3px 10px #dda816;
+    padding-bottom: 15px;
+    background: rgba(110, 102, 102, 0.8);
+    border-radius: 10px;
+  } */
+  
+  /* #accountdetail-form {
+    background-color: darkgrey;
+  } */
+  
+  /* #accountDetail-buttonRow {
+    background-color: darkgreen;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 10px 10px 0 0;
+  }
+   */
+  .rightLink {
+    font-size: 20px;
+  }
+  
+  .form-box {
+    /* margin: 1px solid red; */
+    background: rgba(184, 177, 177, 0.8);
+    width: 70%;
+    margin: 10px auto;
+    /* box-shadow:  3px 3px 5px #c9c6bf; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  /* .edit {
+    width: 80%;
+    margin: 10px auto;
+    background: rgba(110, 102, 102, 0.8);
+  } */
+  
+
+  .detailform-cont{
+padding-top: 10px;
+  }
+
+  .form-h1{
+    margin: 5px auto;
+    text-align: center;
+   }

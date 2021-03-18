@@ -7,10 +7,10 @@ const User = require("../models/user");
 const Tx = require("../models/tx");
 const omit = require("just-omit");
 
-router.get("/:id", (req, res) => { //get user tx history
+router.get("/:id", (req, res) => { //get user tx history and balance
     try {
       const data = User.findById(req.params.id);
-      res.status(StatusCodes.OK).json(data.txHistory);
+      res.status(StatusCodes.OK).json(data);
     } catch (err) {
       res.status(StatusCodes.BAD_REQUEST).json(err);
     }

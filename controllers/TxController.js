@@ -47,7 +47,8 @@ router.put("/:id",
               } else {
 
                 User.find({username: req.body.recipient}, (error, rcvUser) => { //check if recipient user exists
-                  if (error) {
+                  if (error || User.exists({username: req.body.recipient})) {
+                    console.log("does not exist")
                     res.status(StatusCodes.BAD_REQUEST).send({
                         ...error,
                         reason: `ERROR ${StatusCodes.BAD_REQUEST}, recipient not found`,

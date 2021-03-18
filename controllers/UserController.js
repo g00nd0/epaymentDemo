@@ -95,4 +95,46 @@ router.post(
     }
 );
 
+router.put("/:id", //add money
+        body("newAmount", "Please enter an amount greater than 0.").trim().isNumeric().isInt({ gt: 0 }),
+        (req, res) => {
+            const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Errors returned in an array `errors.array()`.
+            const locals = { UserInput: req.body, errors: errors.array() };
+            res.status(StatusCodes.BAD_REQUEST).send(locals);
+        } else {
+            const txAmt = parseInt(req.body.newAmount)
+            
+            User.findById(req.params.id, (error, sender) => { // check if sender's userid is exists
+              if (error) {
+                res.status(StatusCodes.BAD_REQUEST).send({
+                    ...error,
+                    reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
+                }); //trying to add reason in to reason {}
+              } else {
+                User.findByIdAndUpdate(req.params.id,
+                    {'currentBalance': sender.currentBalance + txAmt },
+                    { new: true },
+                    (err, updatedUser) => {
+                        if (err) {
+                            res.status(StatusCodes.BAD_REQUEST).send({
+                                ...err,
+                                reason: `ERROR ${StatusCodes.BAD_REQUEST}, an error has occurred`,
+                                });
+                        } else {
+                            res.status(StatusCodes.OK).send("Transaction Success!");
+                        }
+                    }
+                    )
+              }
+                     
+        })
+        }}
+
+
+
+);
+
+
 module.exports = router;

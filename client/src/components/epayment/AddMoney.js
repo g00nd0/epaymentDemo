@@ -33,7 +33,7 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                     console.log('error', error)
                 })
         
-    }, [])
+    }, [sent])
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -48,9 +48,11 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                     //trigger Navbar change
                     // props.changeName(response.data.username)
                     console.log("response.data after put user", response.data)
+                    // return <Redirect to={"/addmoney"} />;
+                    // setSent(true);
                     setTimeout(() => {
                         setSent(true);
-                    }, 2000);
+                    }, 1000);
                 })
                 .catch((error) => {
                     console.log("error", error.response.data.errors);
@@ -61,8 +63,12 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                     }
                 });
 
-       return <Redirect to="/addmoney" />
+       
     };
+
+    if (sent) {
+        return <Redirect to={"/"} />;
+      }
 
     const showErrors = () => {
         let errors = [];

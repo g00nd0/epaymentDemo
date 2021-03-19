@@ -57,7 +57,7 @@ const NavBar = ({ user }) => {
             title={<AccountCircle />}
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item as={Link} to={`/user/${user.userId}`}>
+            <NavDropdown.Item as={Link} to={`/user`}>
               View Profile
             </NavDropdown.Item>
             <NavDropdown.Divider />

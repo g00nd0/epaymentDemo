@@ -34,8 +34,8 @@ function App() {
         <NavBar user={user}/>
         <Switch>
           <Route exact path="/">
-            {/* <Home /> */}
-            <h1>Home</h1>
+            {console.log(user)}
+          {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
           </Route>
           <Route exact path="/restricted">
             <h1>You are not authorised to visit this page.</h1>
@@ -44,7 +44,7 @@ function App() {
             {/* {user.userId === undefined ? <Redirect to={"/login"} /> : <SendMoney />}   */}
             <h1>Send Money</h1>
           </Route>
-          <Route path="/user/:id">
+          <Route path="/user">
             {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
           </Route>
           <Route exact path="/addmoney">

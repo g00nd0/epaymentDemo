@@ -25,7 +25,7 @@ const Login = (props) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [loginStatus, setLoginStatus] = useState(false); //to redirect to /beatseq
   const [status, setStatus] = useState(""); //inform user that logging in
-
+  const [userId, setUserId] = useState()
   // const secret = process.env.JWT_SECRET_KEY;
 
   const handleLogin = (event) => {
@@ -44,6 +44,7 @@ const Login = (props) => {
             userId: decoded.user._id,
             username: decoded.user.username,
           }; //useState or if statement?
+          setUserId(user.userId)
           setStatus("logging in"); //re-render
           props.setUser(user);
           console.log("logging in");
@@ -65,10 +66,11 @@ const Login = (props) => {
       });
   };
 
-  if (loginStatus === true) {
-    //redirect to /beatseq{
-    return <Redirect to={"/beatseq"} />;
-  }
+  // if (loginStatus === true) {
+  //   //redirect to /beatseq{
+  //     console.log(userId)
+  //   return <Redirect to={`/user/${userId}`} />;
+  // }
 
   const keyWidth = 2;
   const valueWidth = 6;

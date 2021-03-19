@@ -23,7 +23,7 @@ const AccountView = () => {//user={userId, username}
 
     useEffect(() => {//get the user
         axios
-            .get(`/api/user/${userIdParam}`)
+            .get(`/api/user/${user.userId}`)
             // .get(`/user/${userId}`)
             .then((response) => {
                 setFormData(response.data);
@@ -40,7 +40,7 @@ const AccountView = () => {//user={userId, username}
 
     return (
         <div>
-            {user.userId === userIdParam ? ( //prevent people from manipulating with userId in params
+            {user.userId  ? ( //prevent people from manipulating with userId in params
                 <div className="form-box">
                     <div class="form-h1">
                         <h1>Account Details</h1>
@@ -86,8 +86,11 @@ const AccountView = () => {//user={userId, username}
                         </div>
                     </div>
                 </div>)
-                : (
+                : (<>
                     <Redirect to={"/restricted"} />
+                    {console.log(user.userId)}
+                    {console.log(userIdParam)}
+                    </>
                 )
             }
         </div >

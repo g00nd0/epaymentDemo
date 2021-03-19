@@ -10,7 +10,7 @@ const User = require("../models/user");
 const Tx = require("../models/tx");
 const omit = require("just-omit");
 
-router.get("/:id", (req, res) => { //get user tx history and balance
+router.get("/:id", (req, res) => { //get user current balance
 
       User.findById(req.params.id, (error, user) => {
         if (error) {
@@ -19,12 +19,7 @@ router.get("/:id", (req, res) => { //get user tx history and balance
               reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
           }); //trying to add reason in to reason {}
       } else {
-          console.log("user", user);
-          const txInfo = {
-            currentBalance: user.currentBalance,
-            txHistory: user.txHistory
-          }
-          res.status(StatusCodes.OK).json(txInfo);
+          res.status(StatusCodes.OK).json(user.currentBalance);
       }
       });      
     

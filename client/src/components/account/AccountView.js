@@ -77,7 +77,7 @@ const AccountView = () => {//user={userId, username}
                             <Col sm={buffer} />
                             <FormLabel column sm={keyWidth}><span class="font-weight-bold">Current Balance : </span> </FormLabel>
                             <Col sm={valueWidth}>
-                                <p style={{ padding: "7px 15px" }}>{formData.currentBalance}</p>
+                                <p style={{ padding: "7px 15px" }}>{`SGD $${formData.currentBalance}`}</p>
                             </Col>
                         </FormGroup>
 

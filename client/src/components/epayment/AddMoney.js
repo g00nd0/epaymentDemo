@@ -7,8 +7,7 @@ import { useParams, Link, Redirect } from "react-router-dom";
 const jwt = require("jsonwebtoken");
 
 const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
-    const [formData, setFormData] = useState({
-    })
+    const [formData, setFormData] = useState({})
     const [currentBalance, setCurrentBalance] = useState()
     const [errorMsg, setErrorMsg] = useState()
     const [sent, setSent] = useState(false)

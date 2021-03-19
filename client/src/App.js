@@ -9,6 +9,8 @@ import {
 import { useState, useEffect } from "react";
 // import Home from "./pages/Home";
 import AddMoney from "./components/epayment/AddMoney";
+import SendMoney from "./components/epayment/SendMoney";
+import ShowTxHistory from "./components/epayment/ShowTxHistory";
 import Login from "./components/account/Login";
 import SignUp from "./components/account/SignUp";
 import AccountView from "./components/account/AccountView";
@@ -34,15 +36,13 @@ function App() {
         <NavBar user={user}/>
         <Switch>
           <Route exact path="/">
-            {console.log(user)}
-          {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
+            {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
           </Route>
           <Route exact path="/restricted">
             <h1>You are not authorised to visit this page.</h1>
           </Route>
           <Route exact path="/sendmoney">
-            {/* {user.userId === undefined ? <Redirect to={"/login"} /> : <SendMoney />}   */}
-            <h1>Send Money</h1>
+            {user.userId === undefined ? <Redirect to={"/login"} /> : <SendMoney />}  
           </Route>
           <Route path="/user">
             {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
@@ -50,6 +50,9 @@ function App() {
           <Route exact path="/addmoney">
             {user.userId === undefined ? <Redirect to={"/login"} /> : <AddMoney />}
           {/* <h1>Add Money</h1> */}
+          </Route>
+          <Route exact path="/txhistory">
+            {user.userId === undefined ? <Redirect to={"/login"} /> : <ShowTxHistory />}
           </Route>
           <Route exact path="/signup">
             {user.userId === undefined ? <SignUp setUser={setUser} /> : <Redirect to={`/user/${user.userId}`} />}

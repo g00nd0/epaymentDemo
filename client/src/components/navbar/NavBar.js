@@ -33,19 +33,20 @@ const NavBar = ({ user }) => {
       <Nav.Link as={Link} to="/sendmoney">
             Send Money
           </Nav.Link>
-        {loggedIn ? (
+        {loggedIn ? (<>
           <Nav.Link as={Link} to="/addmoney">
             Add Money
           </Nav.Link>
+          <Nav.Link as={Link} to="/txHistory">
+          Transaction History
+        </Nav.Link>
+        </>
         ) : (
           // <Nav.Link onTouchCancel="/teaser">Teaser</Nav.Link>
           <></>
         )}
         
       </Nav>
-
-      {/* {loggedIn ? (<Navbar.Text><span id="welcome-name">Welcome {user.username}</span></Navbar.Text>) : ""} */}
-
       {loggedIn ? (
         <Nav className="ml-auto" id="navBar-right-account">
           <Navbar.Text>

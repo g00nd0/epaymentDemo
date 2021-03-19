@@ -6,12 +6,10 @@ import {
   FormLabel,
   FormControl,
   FormGroup,
-  FormText,
   Row,
   Col,
   Alert,
 } from "react-bootstrap";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect } from "react-router-dom";
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
@@ -26,7 +24,6 @@ const Login = (props) => {
   const [loginStatus, setLoginStatus] = useState(false); //to redirect to /beatseq
   const [status, setStatus] = useState(""); //inform user that logging in
   const [userId, setUserId] = useState()
-  // const secret = process.env.JWT_SECRET_KEY;
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -39,7 +36,7 @@ const Login = (props) => {
           //set token to localStorage
           const token = response.data.token;
           localStorage.setItem("token", token);
-          const decoded = jwt.verify(token, "grab"); //cant read secret :/
+          const decoded = jwt.verify(token, "grab"); //cant read secret
           const user = {
             userId: decoded.user._id,
             username: decoded.user.username,
@@ -66,11 +63,9 @@ const Login = (props) => {
       });
   };
 
-  // if (loginStatus === true) {
-  //   //redirect to /beatseq{
-  //     console.log(userId)
-  //   return <Redirect to={`/user/${userId}`} />;
-  // }
+  if (loginStatus === true) {
+    return <Redirect to={`/user`} />;
+  }
 
   const keyWidth = 2;
   const valueWidth = 6;

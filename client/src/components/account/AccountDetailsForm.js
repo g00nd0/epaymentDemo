@@ -7,8 +7,7 @@ import { useParams, Link, Redirect } from "react-router-dom";
 const jwt = require("jsonwebtoken");
 
 const AccountDetailsForm = (props) => {//received user={userId, userName} from AccountEdit
-    const [formData, setFormData] = useState({
-    })
+    const [formData, setFormData] = useState({})
     const [currentUsername, setCurrentUsername] = useState()
     const [errorMsg, setErrorMsg] = useState()
     const [sent, setSent] = useState(false)
@@ -17,7 +16,7 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
     const userId = useParams().id
 
     useEffect(() => {//get user is there is userId in params
-        if (userId) {// users/new also runs?
+        if (userId) {
             setIsLoading(true)
             console.log("before axios")
             axios.get(`/api/user/${userId}`)
@@ -25,7 +24,6 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                     setFormData(response.data)
                     setCurrentUsername(response.data.username)
                     setIsLoading(false)
-                    console.log("response get user", response)
                 })
                 .catch((error) => {
                     console.log('error', error)
@@ -64,10 +62,9 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                                 };
                                 console.log("logging in");
                                 props.setUser(user);
-                                //to replace with Kayla's special effect
-                                // alert("User created and directing you to landing page")
+                         
                                 setLoginMsg(true)
-                                // setSent(true); //created user & posted session
+                        
                                 setTimeout(() => {
                                     setSent(true)
                                 }, 1000);
@@ -75,19 +72,13 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                             }
                         })
                         .catch((error) => {
-                            //handling session error not working
-                            // setStatus("");
-                            // setErrorMsg(error.error);
-                            // console.log("err here")
-                            // console.log(error)
-                            // console.log(error.name)
+
                             if (error.response.data.error === undefined) {
                                 setErrorMsg(error.response.statusText)
                             } else {
                                 setErrorMsg([{ msg: (error.response.statusText) + ", " + (error.response.data.error) }]);
                             }
-                            // setErrorMsg([{ msg: (error.response.data.error) }]); // custom message from backend
-                            // console.log("error from posting session", error.response.data.error);
+    
                         });
                 })
                 .catch((error) => {// catch post error, validation of signup form
@@ -101,17 +92,13 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                     }
                 });
 
-            // validation WIP
-            // const validate = formSchema.validate(formData, { abortEarly: false })
-            // console.log(validate.error)
         } else if (userId) {//existing user => PUT
             axios
                 .put(`/api/user/${userId}`, updatedInfo)
                 .then((response) => {
-                    //need to let navbar know so it can re-render itself
+           
                     console.log("put user response", response)
-                    //trigger Navbar change
-                    // props.changeName(response.data.username)
+      
                     console.log("response.data after put user", response.data)
                     setTimeout(() => {
                         setSent(true);
@@ -132,7 +119,6 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
         return <Redirect to={`/user/${userId}`} />
     }
     else if (sent && !userId) { //signing up
-        // return <Redirect to={'/login'} />
         return <Redirect to={'/'} />
     }
 
@@ -190,9 +176,7 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                     <Col sm={valueWidth}>
                         <FormControl
                             type="text"
-                            // value={formData.username}
                             value={userId ? "" : formData.username}
-                            // disabled={ isLoading }
                             disabled={userId}
                             onChange={(event) => {
                                 setFormData((state) => {
@@ -284,9 +268,6 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                             variant="primary"
                             style={{
                                 borderRadius: "4px",
-                                // width: "150px",
-                                // padding: "0 5px 0 5px",
-                                // border: "3px solid",
                                 fontWeight: "bold",
                                 display: "flex",
                                 justifyContent: "right"

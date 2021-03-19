@@ -8,26 +8,16 @@ const jwt = require("jsonwebtoken");
 
 const AccountView = () => {//user={userId, username}
     const [formData, setFormData] = useState({});
-    // const userId = props.user.userId;
-    // console.log("props.userId", props.user.userId)
     const userIdParam = useParams().id;
-
-    // const [userId, setUserId] = useState(props.user.userId)
     const token = localStorage.getItem("token");
-    const decoded = jwt.verify(token, "grab");//cant read secret :/
+    const decoded = jwt.verify(token, "grab");//cant read secret
     const user = { userId: decoded.user._id, username: decoded.user.username }
-
-    // useEffect(() => {
-    //     setUserId(user.userId)
-    // }, [user.userId])
 
     useEffect(() => {//get the user
         axios
             .get(`/api/user/${user.userId}`)
-            // .get(`/user/${userId}`)
             .then((response) => {
                 setFormData(response.data);
-                console.log("getting user to view", response);
             })
             .catch((error) => {
                 console.log("error", error);
@@ -88,8 +78,6 @@ const AccountView = () => {//user={userId, username}
                 </div>)
                 : (<>
                     <Redirect to={"/restricted"} />
-                    {console.log(user.userId)}
-                    {console.log(userIdParam)}
                     </>
                 )
             }

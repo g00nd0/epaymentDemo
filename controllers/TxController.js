@@ -25,7 +25,7 @@ router.get("/:id", (req, res) => { //get user current balance
     
   });
 
-router.get("/:id/date_range/", (req, res) => { //get user tx history by specified period
+router.get("/:id/date_range", (req, res) => { //get user tx history by specified period
 
   User.findById(req.params.id, (error, data) => {
     if (error) {
@@ -34,13 +34,19 @@ router.get("/:id/date_range/", (req, res) => { //get user tx history by specifie
             reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
         }); //trying to add reason in to reason {}
     } else {
+
+      const query = {
+        startDate: req.query.startDate,
+        endDate: req.query.endDate,
+      }
+
       const utcOffset = (new Date(Date.now())).getTimezoneOffset()/60;
-      const startDate = (new Date(new Date(req.query.startDate).setHours((00-utcOffset), 00, 00)));
-      const endDate = (new Date(new Date(req.query.endDate).setHours(23-utcOffset, 59, 59)));
+      const startDate = (new Date(new Date(query.startDate).setHours(00-utcOffset, 00, 00)));
+      const endDate = (new Date(new Date(query.endDate).setHours(23-utcOffset, 59, 59)));
       const txRange = data.txHistory.filter((tx)=> {
         return tx.createdAt >= startDate && tx.createdAt <= endDate
       })
-      
+
       res.status(StatusCodes.OK).send(txRange);
     }
   }).lean(); //returns response.data instead of mongoose collection

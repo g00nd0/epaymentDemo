@@ -4,8 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const Logout = (props) => {// user={userId, username}
-    // console.log("props.user.userId at logout", props.user.userId)
+const Logout = (props) => {
+
     console.log(process.env.REACT_APP_JWT_SECRET_KEY)
     const token = localStorage.getItem("token");
     const decoded = jwt.verify(token, "grab");//cant read secret :/

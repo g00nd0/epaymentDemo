@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../../css/accountform.css";
 import { Form, Button, FormLabel, FormControl, FormGroup, FormText, FormCheck, Row, Col, Alert } from "react-bootstrap";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useParams, Link, Redirect } from "react-router-dom";
 const jwt = require("jsonwebtoken");
 
@@ -15,7 +14,7 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
     const [loginMsg, setLoginMsg] = useState(false)
 
     const token = localStorage.getItem("token");
-    const decoded = jwt.verify(token, "grab");//cant read secret :/
+    const decoded = jwt.verify(token, "grab");//cant read secret 
     const user = { userId: decoded.user._id, username: decoded.user.username }
     
 
@@ -26,7 +25,6 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                 .then((response) => {
                     setCurrentBalance(response.data)
                     setIsLoading(false)
-                    console.log("response get user", response)
                 })
                 .catch((error) => {
                     console.log('error', error)
@@ -42,19 +40,11 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
         axios
                 .put(`/api/user/${user.userId}`, updatedInfo)
                 .then((response) => {
-                    //need to let navbar know so it can re-render itself
-                    console.log("put user response", response)
-                    //trigger Navbar change
-                    // props.changeName(response.data.username)
-                    console.log("response.data after put user", response.data)
-                    // return <Redirect to={"/addmoney"} />;
-                    // setSent(true);
                     setTimeout(() => {
                         setSent(true);
                     }, 1000);
                 })
                 .catch((error) => {
-                    console.log("error", error.response.data.errors);
                     if (error.response.data.errors === undefined) {
                         setErrorMsg([{ msg: error.response.statusText }])
                     } else {
@@ -134,10 +124,6 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                     <Col sm={valueWidth}>
                         <FormControl
                             type="number"
-                            // value={formData.username}
-                            // value={0}
-                            // disabled={ isLoading }
-                            
                             onChange={(event) => {
                                 setFormData((state) => {
                                     return { ...state, newAmount: event.target.value }
@@ -161,9 +147,6 @@ const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
                             variant="primary"
                             style={{
                                 borderRadius: "4px",
-                                // width: "150px",
-                                // padding: "0 5px 0 5px",
-                                // border: "3px solid",
                                 fontWeight: "bold",
                                 display: "flex",
                                 justifyContent: "right"

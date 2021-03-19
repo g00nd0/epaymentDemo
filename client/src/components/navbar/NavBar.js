@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Navbar, Nav, Button, Col, NavDropdown } from "react-bootstrap";
+import {react} from "react";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AccountCircle, ExitToApp } from "@material-ui/icons";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import { StatusProvider, useUser, useDispatch } from "./context/Context";
 
 const NavBar = ({ user }) => {
-  // {userId, userName}
 
   const loggedIn = user.userId === undefined ? false : true;
 
@@ -28,7 +26,6 @@ const NavBar = ({ user }) => {
         />{" "}
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      {/* <Navbar.Collapse id="basic-navbar-nav"> */}
       <Nav className="mr-auto" id="navBar-left">
       <Nav.Link as={Link} to="/sendmoney">
             Send Money
@@ -42,7 +39,6 @@ const NavBar = ({ user }) => {
         </Nav.Link>
         </>
         ) : (
-          // <Nav.Link onTouchCancel="/teaser">Teaser</Nav.Link>
           <></>
         )}
         
@@ -80,8 +76,6 @@ const NavBar = ({ user }) => {
           </Nav.Link>
         </Nav>
       )}
-
-      {/* </Navbar.Collapse> */}
     </Navbar>
   );
 };

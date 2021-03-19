@@ -7,7 +7,6 @@ import {
   Redirect,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-// import Home from "./pages/Home";
 import AddMoney from "./components/epayment/AddMoney";
 import SendMoney from "./components/epayment/SendMoney";
 import ShowTxHistory from "./components/epayment/ShowTxHistory";

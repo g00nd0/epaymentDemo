@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "../../css/accountform.css";
-import { Form, Button, FormLabel, FormControl, FormGroup, FormText, FormCheck, Row, Col, Alert } from "react-bootstrap";
+import { Form, Button, FormLabel, FormControl, FormGroup, FormText, Row, Col, Alert } from "react-bootstrap";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import { useParams, Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 const jwt = require("jsonwebtoken");
 
 const SendMoney = () => {
@@ -24,17 +24,9 @@ const SendMoney = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // setFormData({...formData, sender: user.username})
         axios
                 .put(`/api/tx/${user.userId}`, formData)
                 .then((response) => {
-                    //need to let navbar know so it can re-render itself
-                    console.log("put user response", response)
-                    //trigger Navbar change
-                    // props.changeName(response.data.username)
-                    console.log("response.data after put user", response.data)
-                    // return <Redirect to={"/addmoney"} />;
-                    // setSent(true);
                     setTimeout(() => {
                         setSent(true);
                     }, 1000);
@@ -47,12 +39,10 @@ const SendMoney = () => {
                         setErrorMsg(error.response.data.errors); // array of objects
                     }
                 });
-
-       
     };
 
     if (sent) {
-        return <Redirect to={`/user`} /> //change to txhistory when ready
+        return <Redirect to={`/txHistory`} /> //change to txhistory when ready
     }
 
     const showErrors = () => {
@@ -111,8 +101,6 @@ const SendMoney = () => {
                 <FormControl
                     type="text"
                     value={formData.recipient}
-                    // value={0}
-                    // disabled={ isLoading }
                     
                     onChange={(event) => {
                         setFormData((state) => {
@@ -134,9 +122,6 @@ const SendMoney = () => {
                 <FormControl
                     type="number"
                     value={formData.txAmount}
-                    // value={0}
-                    // disabled={ isLoading }
-                    
                     onChange={(event) => {
                         setFormData((state) => {
                             return { ...state, txAmount: event.target.value }
@@ -157,9 +142,6 @@ const SendMoney = () => {
                 <FormControl
                     type="text"
                     value={formData.description}
-                    // value={0}
-                    // disabled={ isLoading }
-                    
                     onChange={(event) => {
                         setFormData((state) => {
                             return { ...state, description: event.target.value }
@@ -183,9 +165,6 @@ const SendMoney = () => {
                     variant="primary"
                     style={{
                         borderRadius: "4px",
-                        // width: "150px",
-                        // padding: "0 5px 0 5px",
-                        // border: "3px solid",
                         fontWeight: "bold",
                         display: "flex",
                         justifyContent: "right"

@@ -39,7 +39,8 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
         event.preventDefault();
         const updatedInfo = {
             username: formData.username,
-            name: formData.name,
+            firstName: formData.firstName,
+            lastName: formData.firstName,
             email: formData.email,
         };
         if (!userId) { //new user => POST
@@ -56,7 +57,7 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                                 //set token to localStorage
                                 const token = response.data.token;
                                 localStorage.setItem("token", token);
-                                const decoded = jwt.verify(token, "sei-26"); //cant read secret :/
+                                const decoded = jwt.verify(token, "grab"); //cant read secret :/
                                 const user = {
                                     userId: decoded.user._id,
                                     username: decoded.user.username,
@@ -70,12 +71,16 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                                 setTimeout(() => {
                                     setSent(true)
                                 }, 1000);
+                                
                             }
                         })
                         .catch((error) => {
                             //handling session error not working
                             // setStatus("");
                             // setErrorMsg(error.error);
+                            // console.log("err here")
+                            // console.log(error)
+                            // console.log(error.name)
                             if (error.response.data.error === undefined) {
                                 setErrorMsg(error.response.statusText)
                             } else {
@@ -128,7 +133,7 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
     }
     else if (sent && !userId) { //signing up
         // return <Redirect to={'/login'} />
-        return <Redirect to={'/beatseq'} />
+        return <Redirect to={'/'} />
     }
 
     const showErrors = () => {
@@ -223,35 +228,51 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                     </Col>
                 </FormGroup>
 
-                <FormGroup as={Row} controlId="name">
+                <FormGroup as={Row} controlId="firstName">
                     <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Name : </span></FormLabel>
+                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">First Name: </span></FormLabel>
                     <Col sm={valueWidth}>
                         <FormControl type="text"
-                            value={formData.name}
+                            value={formData.firstName}
                             disabled={isLoading}
                             onChange={(event) => {
                                 setFormData((state) => {
-                                    return { ...state, name: event.target.value }
+                                    return { ...state, firstName: event.target.value }
                                 })
                             }} />
                     </Col>
                 </FormGroup>
 
-                <FormGroup as={Row} controlId="email">
+                <FormGroup as={Row} controlId="lastName">
                     <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Email : </span> </FormLabel>
+                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Last Name: </span> </FormLabel>
                     <Col sm={valueWidth}>
-                        <FormControl type="email"
-                            value={formData.email}
+                        <FormControl type="text"
+                            value={formData.lastName}
                             disabled={isLoading}
                             onChange={(event) => {
                                 setFormData((state) => {
-                                    return { ...state, email: event.target.value }
+                                    return { ...state, lastName: event.target.value }
                                 })
                             }} />
                     </Col>
                 </FormGroup>
+
+                <FormGroup as={Row} controlId="contactNum">
+                    <Col sm={buffer} />
+                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Mobile #: </span> </FormLabel>
+                    <Col sm={valueWidth}>
+                        <FormControl type="number"
+                            value={formData.contactNum}
+                            disabled={isLoading}
+                            onChange={(event) => {
+                                setFormData((state) => {
+                                    return { ...state, contactNum: event.target.value }
+                                })
+                            }} />
+                    </Col>
+                </FormGroup>
+
 
                 <Row>
                     <Col sm={buffer} />

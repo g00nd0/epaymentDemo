@@ -71,7 +71,7 @@ const NavBar = ({ user }) => {
         </Nav>
       ) : (
         <Nav className="ml-auto" id="navBar-right-account">
-          <Nav.Link as={Link} to="/user/new">
+          <Nav.Link as={Link} to="/signup">
             Sign Up!
           </Nav.Link>
           <Nav.Link as={Link} to="/login">

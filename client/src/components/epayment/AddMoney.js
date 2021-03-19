@@ -6,102 +6,42 @@ import { Form, Button, FormLabel, FormControl, FormGroup, FormText, FormCheck, R
 import { useParams, Link, Redirect } from "react-router-dom";
 const jwt = require("jsonwebtoken");
 
-const AccountDetailsForm = (props) => {//received user={userId, userName} from AccountEdit
+const AddMoney = (props) => {//received user={userId, userName} from AccountEdit
     const [formData, setFormData] = useState({
     })
-    const [currentUsername, setCurrentUsername] = useState()
+    const [currentBalance, setCurrentBalance] = useState()
     const [errorMsg, setErrorMsg] = useState()
     const [sent, setSent] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [loginMsg, setLoginMsg] = useState(false)
-    const userId = useParams().id
+
+    const token = localStorage.getItem("token");
+    const decoded = jwt.verify(token, "grab");//cant read secret :/
+    const user = { userId: decoded.user._id, username: decoded.user.username }
+    
 
     useEffect(() => {//get user is there is userId in params
-        if (userId) {// users/new also runs?
+       
             setIsLoading(true)
-            console.log("before axios")
-            axios.get(`/api/user/${userId}`)
+            axios.get(`/api/tx/${user.userId}`)
                 .then((response) => {
-                    setFormData(response.data)
-                    setCurrentUsername(response.data.username)
+                    setCurrentBalance(response.data)
                     setIsLoading(false)
                     console.log("response get user", response)
                 })
                 .catch((error) => {
                     console.log('error', error)
                 })
-        } else {
-            console.log("new user. no set data")
-        }
+        
     }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const updatedInfo = {
-            username: formData.username,
-            name: formData.name,
-            email: formData.email,
+            newAmount: formData.newAmount,
         };
-        if (!userId) { //new user => POST
-            axios
-                .post("/api/user", formData)
-                .then((response) => {
-                    console.log("user created, response", response, "time to axios post session");
-                    //axios a session and get token
-                    axios
-                        .post("/api/session", formData, { withCredentials: true })
-                        .then((response) => {
-                            console.log("response.data from post api session", response.data);
-                            if (response.data.token) {//get token
-                                //set token to localStorage
-                                const token = response.data.token;
-                                localStorage.setItem("token", token);
-                                const decoded = jwt.verify(token, "sei-26"); //cant read secret :/
-                                const user = {
-                                    userId: decoded.user._id,
-                                    username: decoded.user.username,
-                                };
-                                console.log("logging in");
-                                props.setUser(user);
-                                //to replace with Kayla's special effect
-                                // alert("User created and directing you to landing page")
-                                setLoginMsg(true)
-                                // setSent(true); //created user & posted session
-                                setTimeout(() => {
-                                    setSent(true)
-                                }, 1000);
-                            }
-                        })
-                        .catch((error) => {
-                            //handling session error not working
-                            // setStatus("");
-                            // setErrorMsg(error.error);
-                            if (error.response.data.error === undefined) {
-                                setErrorMsg(error.response.statusText)
-                            } else {
-                                setErrorMsg([{ msg: (error.response.statusText) + ", " + (error.response.data.error) }]);
-                            }
-                            // setErrorMsg([{ msg: (error.response.data.error) }]); // custom message from backend
-                            // console.log("error from posting session", error.response.data.error);
-                        });
-                })
-                .catch((error) => {// catch post error, validation of signup form
-                    console.log("error from posting user S", error.response.data.errors);
-                    console.log("error from posting user", error.response.data.error);
-                    console.log("error from posting user error.response", error.response);
-                    if (error.response.data.errors === undefined) {
-                        setErrorMsg([{ msg: error.response.statusText }])
-                    } else {
-                        setErrorMsg(error.response.data.errors);
-                    }
-                });
-
-            // validation WIP
-            // const validate = formSchema.validate(formData, { abortEarly: false })
-            // console.log(validate.error)
-        } else if (userId) {//existing user => PUT
-            axios
-                .put(`/api/user/${userId}`, updatedInfo)
+        axios
+                .put(`/api/user/${user.userId}`, updatedInfo)
                 .then((response) => {
                     //need to let navbar know so it can re-render itself
                     console.log("put user response", response)
@@ -120,16 +60,9 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                         setErrorMsg(error.response.data.errors); // array of objects
                     }
                 });
-        }
-    };
 
-    if (sent && userId) { //editing profile
-        return <Redirect to={`/user/${userId}`} />
-    }
-    else if (sent && !userId) { //signing up
-        // return <Redirect to={'/login'} />
-        return <Redirect to={'/beatseq'} />
-    }
+       return <Redirect to="/addmoney" />
+    };
 
     const showErrors = () => {
         let errors = [];
@@ -179,77 +112,37 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
     return (
         <div class="detailform-cont">
             <Form onSubmit={handleSubmit}>
+
                 <FormGroup as={Row} controlId="username">
                     <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Username : </span> </FormLabel>
+                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Current Balance : </span> </FormLabel>
+                    <Col sm={valueWidth}>
+
+                        <p style={{ padding: "7px 15px" }}>{currentBalance}</p>
+
+                    </Col>
+                </FormGroup>
+
+                <FormGroup as={Row} controlId="newAmount">
+                    <Col sm={buffer} />
+                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Amount to Add : </span> </FormLabel>
                     <Col sm={valueWidth}>
                         <FormControl
-                            type="text"
+                            type="number"
                             // value={formData.username}
-                            value={userId ? "" : formData.username}
+                            // value={0}
                             // disabled={ isLoading }
-                            disabled={userId}
+                            
                             onChange={(event) => {
                                 setFormData((state) => {
-                                    return { ...state, username: event.target.value }
+                                    return { ...state, newAmount: event.target.value }
                                 })
                             }}
                             onBlur={(event) => handleBlur(event)}
                         />
                         <FormText className="text">
-                            Username must be at least 6 characters long
+                            Amount must be more than $0.00.
                             </FormText>
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row} controlId="password">
-                    <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}> <span class="font-weight-bold">Password : </span>{" "}</FormLabel>
-
-                    <Col sm={valueWidth}>
-                        <FormControl
-                            type="Password"
-                            value={userId ? "" : formData.password}
-                            onChange={(event) => {
-                                setFormData((state) => {
-                                    return { ...state, password: event.target.value };
-                                });
-                            }}
-                            disabled={userId}
-                        />
-                        <FormText className="text">
-                            Password must be at least 8 alphanumeric characters long
-                            </FormText>
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row} controlId="name">
-                    <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Name : </span></FormLabel>
-                    <Col sm={valueWidth}>
-                        <FormControl type="text"
-                            value={formData.name}
-                            disabled={isLoading}
-                            onChange={(event) => {
-                                setFormData((state) => {
-                                    return { ...state, name: event.target.value }
-                                })
-                            }} />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row} controlId="email">
-                    <Col sm={buffer} />
-                    <FormLabel column sm={keyWidth}><span class="font-weight-bold">Email : </span> </FormLabel>
-                    <Col sm={valueWidth}>
-                        <FormControl type="email"
-                            value={formData.email}
-                            disabled={isLoading}
-                            onChange={(event) => {
-                                setFormData((state) => {
-                                    return { ...state, email: event.target.value }
-                                })
-                            }} />
                     </Col>
                 </FormGroup>
 
@@ -273,25 +166,13 @@ const AccountDetailsForm = (props) => {//received user={userId, userName} from A
                             type="submit"
                             disabled={isLoading}
                         >
-                            {userId ? "Save" : "Create"}
+                            {"Add Money"}
                         </Button>
                     </Col>
-                    {userId ? (
-
-                        <Col>
-                            <Link to={`/user/${userId}`}>
-                                <Button class="btn btn-secondary"> Back
-                            </Button>
-                            </Link>
-                        </Col>
-
-                    ) : (
-                            ""
-                        )}
                 </Row>
             </Form>
         </div>
     );
 };
 
-export default AccountDetailsForm;
+export default AddMoney;

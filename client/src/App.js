@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 // import Home from "./pages/Home";
+import AddMoney from "./components/epayment/AddMoney";
 import Login from "./components/account/Login";
 import SignUp from "./components/account/SignUp";
 import AccountView from "./components/account/AccountView";
@@ -44,13 +45,13 @@ function App() {
             <h1>Send Money</h1>
           </Route>
           <Route path="/user/:id">
-          {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
+            {user.userId === undefined ? <Redirect to={"/login"} /> : <AccountView />}
           </Route>
           <Route exact path="/addmoney">
-          {/* {user.userId === undefined ? <Redirect to={"/login"} /> : <AddMoney />} */}
-          <h1>Add Money</h1>
+            {user.userId === undefined ? <Redirect to={"/login"} /> : <AddMoney />}
+          {/* <h1>Add Money</h1> */}
           </Route>
-          <Route exact path="/user/new">
+          <Route exact path="/signup">
             {user.userId === undefined ? <SignUp setUser={setUser} /> : <Redirect to={`/user/${user.userId}`} />}
           </Route>
           <Route exact path="/login">

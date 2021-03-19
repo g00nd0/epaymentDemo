@@ -14,7 +14,7 @@ const AccountView = () => {//user={userId, username}
 
     // const [userId, setUserId] = useState(props.user.userId)
     const token = localStorage.getItem("token");
-    const decoded = jwt.verify(token, "sei-26");//cant read secret :/
+    const decoded = jwt.verify(token, "grab");//cant read secret :/
     const user = { userId: decoded.user._id, username: decoded.user.username }
 
     // useEffect(() => {
@@ -61,61 +61,28 @@ const AccountView = () => {//user={userId, username}
                             <Col sm={buffer} />
                             <FormLabel column sm={keyWidth}><span class="font-weight-bold">Name : </span></FormLabel>
                             <Col sm={valueWidth}>
-                                <FormControl type="text"
-                                    value={formData.name}
-                                    disabled={true}
-                                />
+                                <p style={{ padding: "7px 15px" }}>{`${formData.firstName} ${formData.lastName}`}</p>
                             </Col>
                         </FormGroup>
 
-                        <FormGroup as={Row} controlId="email">
+                        <FormGroup as={Row} controlId="contactNum">
                             <Col sm={buffer} />
-                            <FormLabel column sm={keyWidth}><span class="font-weight-bold">Email : </span> </FormLabel>
+                            <FormLabel column sm={keyWidth}><span class="font-weight-bold">Mobile # : </span> </FormLabel>
                             <Col sm={valueWidth}>
-                                <FormControl type="email"
-                                    value={formData.email}
-                                    disabled={true}
-                                />
+                                <p style={{ padding: "7px 15px" }}>{formData.contactNum}</p>
+                            </Col>
+                        </FormGroup>
+
+                        <FormGroup as={Row} controlId="currentBalance">
+                            <Col sm={buffer} />
+                            <FormLabel column sm={keyWidth}><span class="font-weight-bold">Current Balance : </span> </FormLabel>
+                            <Col sm={valueWidth}>
+                                <p style={{ padding: "7px 15px" }}>{formData.currentBalance}</p>
                             </Col>
                         </FormGroup>
 
                         <div id="" class="pt-1">
-                            <Row>
-                                <Col sm={buffer + keyWidth} />
-                                <Col sm={valueWidth}>
-                                    <div className="rightLink" class="d-flex flex-row">
-                                        <Link to={`/user/${user.userId}/edit`}>
-                                            <Button
-                                                variant="primary"
-                                                style={{
-                                                    borderRadius: "10px",
-                                                    padding: "6px",
-                                                    width: "150px",
-                                                    // border: "2px solid",
-                                                    fontWeight: "bold",
-                                                    margin: "5px",
-                                                }}
-                                            >
-                                                Edit Profile
-                </Button>
-                                        </Link>
-                                        <Link to={`/user/${user.userId}/delete`}>
-                                            <Button
-                                                variant="danger"
-                                                style={{
-                                                    borderRadius: "10px",
-                                                    padding: "6px",
-                                                    width: "150px",
-                                                    // border: "2px solid red",
-                                                    margin: "5px",
-                                                }}
-                                            >
-                                                Delete Account
-                                </Button>
-                                        </Link>
-                                    </div>
-                                </Col>
-                            </Row>
+                            
                         </div>
                     </div>
                 </div>)

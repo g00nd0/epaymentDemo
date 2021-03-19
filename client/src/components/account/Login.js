@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect } from "react-router-dom";
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const Login = (props) => {
@@ -38,7 +39,7 @@ const Login = (props) => {
           //set token to localStorage
           const token = response.data.token;
           localStorage.setItem("token", token);
-          const decoded = jwt.verify(token, "sei-26"); //cant read secret :/
+          const decoded = jwt.verify(token, "grab"); //cant read secret :/
           const user = {
             userId: decoded.user._id,
             username: decoded.user.username,

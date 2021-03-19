@@ -1,12 +1,14 @@
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const Logout = (props) => {// user={userId, username}
     // console.log("props.user.userId at logout", props.user.userId)
+    console.log(process.env.REACT_APP_JWT_SECRET_KEY)
     const token = localStorage.getItem("token");
-    const decoded = jwt.verify(token, "sei-26");//cant read secret :/
+    const decoded = jwt.verify(token, "grab");//cant read secret :/
     const user = { userId: decoded.user._id, username: decoded.user.username }
 
     const loggedIn = user.userId === undefined ? false : true

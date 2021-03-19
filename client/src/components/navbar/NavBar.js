@@ -3,7 +3,7 @@ import { Navbar, Nav, Button, Col, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AccountCircle, ExitToApp } from "@material-ui/icons";
 import "../../App.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 // import { StatusProvider, useUser, useDispatch } from "./context/Context";
 
 const NavBar = ({ user }) => {
@@ -20,26 +20,28 @@ const NavBar = ({ user }) => {
     >
       <Navbar.Brand as={Link} to="/">
         <img
-          width="30"
-          height="30"
+          src="https://www.grab.com/sg/wp-content/uploads/sites/4/2018/02/cropped-GRAB-Vector-Logo-720x340-1-e1519119683340.png"
+          width="60"
+          height="60"
           className="d-inline-block align-top"
           alt=""
         />{" "}
-        GrabPay
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       {/* <Navbar.Collapse id="basic-navbar-nav"> */}
       <Nav className="mr-auto" id="navBar-left">
+      <Nav.Link as={Link} to="/sendmoney">
+            Send Money
+          </Nav.Link>
         {loggedIn ? (
           <Nav.Link as={Link} to="/addmoney">
             Add Money
           </Nav.Link>
         ) : (
           // <Nav.Link onTouchCancel="/teaser">Teaser</Nav.Link>
-          <Nav.Link as={Link} to="/sendmoney">
-            Send Money
-          </Nav.Link>
+          <></>
         )}
+        
       </Nav>
 
       {/* {loggedIn ? (<Navbar.Text><span id="welcome-name">Welcome {user.username}</span></Navbar.Text>) : ""} */}

@@ -10,22 +10,36 @@ const omit = require("just-omit");
 router.get("/:id", (req, res) => { //get user tx history and balance
     try {
       const data = User.findById(req.params.id);
-      res.status(StatusCodes.OK).json(data);
+      console.log(data)
+      res.status(StatusCodes.OK).json(data.txHistory);
     } catch (err) {
       res.status(StatusCodes.BAD_REQUEST).json(err);
     }
   });
 
-// router.get("/:id", (req, res) => { //get user tx history by specified period
-//   try {
-//     const data = User.findById(req.params.id);
-//     res.status(StatusCodes.OK).json(data.txHistory);
-//   } catch (err) {
-//     res.status(StatusCodes.BAD_REQUEST).json(err);
-//   }
-// }
+router.get("/:id/date_range", (req, res) => { //get user tx history by specified period
 
-// );
+  User.findById(req.params.id, (error, data) => {
+    if (error) {
+        res.status(StatusCodes.BAD_REQUEST).send({
+            ...error,
+            reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
+        }); //trying to add reason in to reason {}
+    } else {
+      const startDate = new Date(new Date("2021-03-18").setHours(14, 30, 00))
+      const endDate = new Date(new Date("2021-03-18").setHours(23, 59, 59))
+      const txRange = data.txHistory.filter((tx)=> {
+        return tx.createdAt >= startDate && tx.createdAt <= endDate
+      })
+      console.log(txRange.length)
+      console.log(startDate.toLocaleDateString('en-SG'))
+      console.log(endDate.toLocaleDateString('en-SG'))
+      res.status(StatusCodes.OK).send(txRange);
+    }
+  }).lean(); //returns response.data instead of mongoose collection
+}
+
+);
 
 router.put("/:id",
     body("sender", "Sender cannot be empty").trim().notEmpty(),
@@ -44,50 +58,71 @@ router.put("/:id",
                     ...error,
                     reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
                 }); //trying to add reason in to reason {}
+                
               } else {
 
-                User.find({username: req.body.recipient}, (error, rcvUser) => { //check if recipient user exists
-                  if (error || User.exists({username: req.body.recipient})) {
-                    console.log("does not exist")
-                    res.status(StatusCodes.BAD_REQUEST).send({
-                        ...error,
-                        reason: `ERROR ${StatusCodes.BAD_REQUEST}, recipient not found`,
-                    }); 
-                  } else {
-                    const txAmt = parseInt(req.body.txAmount)
-
-                    User.findByIdAndUpdate( // update sender's 
-                      req.params.id, // id
-                      {'currentBalance': sender.currentBalance - txAmt , $push: {'txHistory': {...req.body, sender: sender.username}}}, // what to update
-                      { new: true },
-                      (err, updatedUser) => {
-                        if (err) {
-                          res.status(StatusCodes.BAD_REQUEST).send({
-                            ...error,
-                            reason: `ERROR ${StatusCodes.BAD_REQUEST}, an error has occurred`,
-                          });
-                        } else {
-                          User.findByIdAndUpdate( // update recipient's
-                            rcvUser[0]._id, // id
-                            {'currentBalance': rcvUser[0].currentBalance + txAmt , $push: {'txHistory': {...req.body, sender: sender.username}}}, // what to update
-                            { new: true },
-                            (err, updatedUser) => {
+                User.exists({username: req.body.recipient}, (err, rcvUserExists) => {
+                  if (err || !rcvUserExists) {
+                            console.log("does not exist")
+                            res.status(StatusCodes.BAD_REQUEST).send({
+                                ...err,
+                                reason: `ERROR ${StatusCodes.BAD_REQUEST}, recipient not found`,
+                            }); 
+                          } else {
+                            
+                            User.find({username: req.body.recipient}, (err, rcvUser) => { //check if recipient user exists
                               if (err) {
                                 res.status(StatusCodes.BAD_REQUEST).send({
-                                ...error,
-                                reason: `ERROR ${StatusCodes.BAD_REQUEST}, an error has occurred`,
-                                });
-  
+                                    ...err,
+                                    reason: `ERROR ${StatusCodes.BAD_REQUEST}, unknown error at recipient`,
+                                }); 
                               } else {
-                                res.status(StatusCodes.OK).send("Transaction Success!");
+                                const txAmt = parseInt(req.body.txAmount)
+            
+                                User.findByIdAndUpdate( // update sender's 
+                                  req.params.id, // id
+                                  {'currentBalance': sender.currentBalance - txAmt , $push: {'txHistory': {...req.body, sender: sender.username}}}, // what to update
+                                  { new: true },
+                                  (er, updatedUser) => {
+                                    if (er) {
+                                      res.status(StatusCodes.BAD_REQUEST).send({
+                                        ...er,
+                                        reason: `ERROR ${StatusCodes.BAD_REQUEST}, an error has occurred`,
+                                      });
+                                    } else {
+                                      User.findByIdAndUpdate( // update recipient's
+                                        rcvUser[0]._id, // id
+                                        {'currentBalance': rcvUser[0].currentBalance + txAmt , $push: {'txHistory': {...req.body, sender: sender.username}}}, // what to update
+                                        { new: true },
+                                        (er, updatedUser) => {
+                                          if (er) {
+                                            res.status(StatusCodes.BAD_REQUEST).send({
+                                            ...er,
+                                            reason: `ERROR ${StatusCodes.BAD_REQUEST}, an error has occurred`,
+                                            });
+              
+                                          } else {
+                                            res.status(StatusCodes.OK).send("Transaction Success!");
+                                            }
+                                        } ); }
+            
                                 }
-                            } ); }
+                              );     
+            
+                          }
+                        })
 
-                    }
-                  );     
 
-              }
-            })
+
+
+
+                            
+                          }
+                })
+
+                
+
+
             }
             })
 

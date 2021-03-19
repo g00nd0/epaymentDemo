@@ -2,22 +2,35 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
+const bodyParser = require('body-parser');
+const url = require('url');
+const querystring = require('querystring');
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/user");
 const Tx = require("../models/tx");
 const omit = require("just-omit");
 
 router.get("/:id", (req, res) => { //get user tx history and balance
-    try {
-      const data = User.findById(req.params.id);
-      console.log(data)
-      res.status(StatusCodes.OK).json(data.txHistory);
-    } catch (err) {
-      res.status(StatusCodes.BAD_REQUEST).json(err);
-    }
+
+      User.findById(req.params.id, (error, user) => {
+        if (error) {
+          res.status(StatusCodes.BAD_REQUEST).send({
+              ...error,
+              reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
+          }); //trying to add reason in to reason {}
+      } else {
+          console.log("user", user);
+          const txInfo = {
+            currentBalance: user.currentBalance,
+            txHistory: user.txHistory
+          }
+          res.status(StatusCodes.OK).json(txInfo);
+      }
+      });      
+    
   });
 
-router.get("/:id/date_range", (req, res) => { //get user tx history by specified period
+router.get("/:id/date_range/", (req, res) => { //get user tx history by specified period
 
   User.findById(req.params.id, (error, data) => {
     if (error) {
@@ -26,14 +39,13 @@ router.get("/:id/date_range", (req, res) => { //get user tx history by specified
             reason: `ERROR ${StatusCodes.BAD_REQUEST}, not valid id`,
         }); //trying to add reason in to reason {}
     } else {
-      const startDate = new Date(new Date("2021-03-18").setHours(14, 30, 00))
-      const endDate = new Date(new Date("2021-03-18").setHours(23, 59, 59))
+      const utcOffset = (new Date(Date.now())).getTimezoneOffset()/60;
+      const startDate = (new Date(new Date(req.query.startDate).setHours((00-utcOffset), 00, 00)));
+      const endDate = (new Date(new Date(req.query.endDate).setHours(23-utcOffset, 59, 59)));
       const txRange = data.txHistory.filter((tx)=> {
         return tx.createdAt >= startDate && tx.createdAt <= endDate
       })
-      console.log(txRange.length)
-      console.log(startDate.toLocaleDateString('en-SG'))
-      console.log(endDate.toLocaleDateString('en-SG'))
+      
       res.status(StatusCodes.OK).send(txRange);
     }
   }).lean(); //returns response.data instead of mongoose collection
